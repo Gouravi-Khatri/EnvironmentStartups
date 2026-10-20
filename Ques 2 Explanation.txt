@@ -1,0 +1,34 @@
+SECTION 1: TOP 20 ENVIRONMENT STARTUPS IN INDIA
+
+Search Methodology Details and Justification
+
+Search Protocol:
+To establish an objective universe of environmental and climate-tech startups in India, a multi-stage aggregation and validation protocol was executed. Ecosystem database records were ingested from primary venture capital reporting platforms, corporate disclosures, and startup trackers—specifically Tracxn, Inc42 Datalabs, PitchBook, Dealroom, and CLIMAFIX—to identify active Indian startups operating in climate tech, waste management, emissions control, carbon markets, clean hardware, and electric mobility. Regulatory filings from the Ministry of Corporate Affairs (MCA), official company press releases regarding funding rounds, and public financial reporting (for listed entities) were audited. Startups were strictly filtered for environmental sustainability while excluding traditional pure-play solar/wind IPPs or EPC contractors. Funding and valuation metrics were cross-verified across institutional investor reports and public financial intelligence sources.
+
+Search Methodology Justification:
+While environmental startups can be evaluated across multi-dimensional criteria such as carbon offsets, revenue traction, operational scale, or technology adoption this analysis utilizes Total Capital Raised / Enterprise Valuation as the single primary criterion for ranking. In high-growth sectors like climate tech, total capital raised serves as a standardized, objective proxy for market validation, balance sheet capacity, technology readiness level (TRL), institutional investor trust, and overall scaling potential.
+
+Ranking Justifications
+
+Ranking Methodology:
+The top 20 rankings were established strictly using a single ranking metric: Total Equity Capital Raised (Est. USD) 
+
+While environmental startups possess varying asset intensity and operational models, ranking purely by total capital raised provides an unbiased, quantifiable benchmark across diverse sub-sectors (ranging from hardware-heavy EV OEMs and battery recycling plants to asset-light carbon software platforms).
+
+
+
+SECTION 2: WIPO PATENT DATA & MATCHING PROCESS
+
+WIPO Data Extraction and Matching Methodology
+
+Extraction Process:
+Bibliographic patent data was queried and downloaded directly from the WIPO PATENTSCOPE global database into Excel files (.xls / .xlsx) for each startup using search syntax across the Applicant Name (PA:) field (e.g., PA:"Lohum Cleantech" or PA:"Ather Energy"). The exported datasets contained international application numbers, priority application dates, applicant country codes, patent titles, International Patent Classification (IPC) codes, and patent images. Startups with no records returned in WIPO PATENTSCOPE were explicitly designated as having zero international patent filings.
+
+Matching Process & Automated Coding Methodology:
+To integrate the raw WIPO international patent export files with the master startup dataset, an automated Python data pipeline (pandas, glob, xlrd, openpyxl) was developed and executed. The automated matching workflow followed a four-step code logic:
+
+1. Auto-Detection of WIPO Layout Offsets: WIPO PATENTSCOPE exports place metadata query headers in the top three rows. The Python script dynamically detected table headers starting at row index 3 (header=3) to accurately capture the data headers (Application Number, Application Date, Title, IPC).
+2. String Standardization & Alias Resolution: Company names from both the master startup spreadsheet and the WIPO file names were normalized converted to lowercase, stripped of special characters, spaces, and legal suffixes (e.g., Pvt Ltd, Inc) to ensure exact matching across datasets.
+3. Targeted Field Extraction: The script programmatically located the Application Number column across each file, extracted unique alphanumeric patent identifiers (e.g., WO2025215413, IN335043928, US393383871), calculated the total count of valid filings (Total_Patents_WIPO), and aggregated the application IDs into a clean, comma-separated string (Patent_Application_IDs).
+4. Left-Join Dataset Merging & Zero-Handling: Using a LEFT JOIN operation in Python, the patent metrics were merged with the master startup list. For startups with no WIPO files or zero patent records, the pipeline automatically populated Total_Patents_WIPO as 0 and assigned "None / Zero Patents" to the application ID field, guaranteeing that all 20 startups were preserved in the final output file without missing rows.
+
